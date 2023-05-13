@@ -14,8 +14,9 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     
     var danhBa: [LienHe] = []
     var danhSachCanTim: [LienHe] = []
-    var luuTruDanhba: [LienHe] = []
-
+    var isSearched: Bool = false
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         let lienHe1 = LienHe(id: 1, name: "Nguyen Manh Linh", phoneNumber: "0971968611")
@@ -32,20 +33,27 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         let lienHe5 = LienHe(id: 5, name: "Giap Thi Phuong", phoneNumber: "0987654321")
         danhBa.append(lienHe5)
-        
+        search()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return danhBa.count
+        if(isSearched){
+            return danhSachCanTim.count
+        }else {
+            return danhBa.count
+        }
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 150
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+        var currentContact:LienHe
         let cell = tblContacts.dequeueReusableCell(withIdentifier: "ContactCellIdentifier")!
-        
-        let currentContact = danhBa[indexPath.row]
+        if (isSearched) {
+            currentContact = danhSachCanTim[indexPath.row]
+        }else {
+            currentContact = danhBa[indexPath.row]
+        }
         let lblContactName = cell.viewWithTag(101) as! UILabel
         lblContactName.text = currentContact.name
         let lblContactPhone = cell.viewWithTag(102) as! UILabel
@@ -71,32 +79,28 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
     }
     
     @IBAction func btnSearchContact(_ sender: UIButton) {
-        
-        //luuTruDanhba = danhBa
+        search()
+    }
+    func search() {
         let lienHeCanTim: String = txtSearch.text!
-        
+        danhSachCanTim = []
         if lienHeCanTim != ""{
-            luuTruDanhba = danhBa
+            
             for check in danhBa {
+                
                 if check.name.lowercased().contains(lienHeCanTim.lowercased()){
                     danhSachCanTim.append(check)
-                    danhBa = danhSachCanTim
+                    isSearched = true
                     tblContacts.reloadData()
                 }
             }
         }else{
-            danhBa = luuTruDanhba
-            danhSachCanTim = []
+            danhSachCanTim = danhBa
+            isSearched = false
             tblContacts.reloadData()
         }
-        print(danhSachCanTim)
-        print(luuTruDanhba)
     }
-    
 }
-
-
-
 struct LienHe {
     var id: Int
     var name: String
