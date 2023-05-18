@@ -85,20 +85,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         let lienHeCanTim: String = txtSearch.text!
         danhSachCanTim = []
         if lienHeCanTim != ""{
-            
+            isSearched = true
             for check in danhBa {
-                
                 if check.name.lowercased().contains(lienHeCanTim.lowercased()){
                     danhSachCanTim.append(check)
-                    isSearched = true
-                    tblContacts.reloadData()
                 }
             }
         }else{
             danhSachCanTim = danhBa
             isSearched = false
-            tblContacts.reloadData()
         }
+        tblContacts.reloadData()
     }
 }
 struct LienHe {
